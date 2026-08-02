@@ -97,7 +97,7 @@ const LEVEL = [16, 96, 176, 255];
 export function applyGlitch(srcData, dstData, addrMask, dataMask) {
   buildChr(srcData);
   const rowBytes = RENDER_W * 4;
-  const mask13 = addrMask & 0x1FFF; // A0-A12; CHR_SIZE fits in 14 bits, plane bit is A3
+  const chrMask = addrMask & 0x3FFF; // A0-A13; CHR_SIZE (15360) needs the full 14 bits
 
   for (let tileRow = 0; tileRow < TILES_Y; tileRow++) {
     for (let fineY = 0; fineY < TILE; fineY++) {
@@ -107,8 +107,8 @@ export function applyGlitch(srcData, dstData, addrMask, dataMask) {
         const tileIndex = tileRow * TILES_X + tileCol;
         const addr0 = tileIndex * 16 + fineY;
         const addr1 = addr0 + 8;
-        const maskedAddr0 = addr0 & mask13;
-        const maskedAddr1 = addr1 & mask13;
+        const maskedAddr0 = addr0 & chrMask;
+        const maskedAddr1 = addr1 & chrMask;
 
         const r0 = fetchByte(chrBufR[maskedAddr0], dataMask);
         const r1 = fetchByte(chrBufR[maskedAddr1], dataMask);
