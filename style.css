@@ -1,0 +1,139 @@
+:root {
+  color-scheme: dark;
+  --bg: #14161a;
+  --panel: #1e2126;
+  --border: #33383f;
+  --text: #e8e8ea;
+  --accent: #e0407c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.4rem;
+}
+
+.credit {
+  margin: 0 0 1.5rem;
+  font-size: 0.85rem;
+  color: #9aa0a8;
+}
+.credit a { color: var(--accent); }
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.stage {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  line-height: 0;
+}
+
+#out-canvas {
+  width: min(90vw, 768px);
+  height: auto;
+  aspect-ratio: 256 / 240;
+  image-rendering: pixelated;
+  display: block;
+}
+
+.controls {
+  flex: 1 1 260px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.source-controls, .pin-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+button {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+
+.tilt-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+}
+.tilt-controls label { font-size: 0.85rem; white-space: nowrap; }
+.tilt-controls input[type="range"] { flex: 1; }
+#tilt-label { font-variant-numeric: tabular-nums; width: 4.5em; text-align: right; }
+
+.pin-grid {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pin-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+.pin-row-label {
+  font-size: 0.7rem;
+  color: #9aa0a8;
+  width: 3em;
+}
+
+.pin {
+  min-width: 1.8em;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.65rem;
+  border-radius: 3px;
+  background: #2a3a2a;
+  border-color: #3d5a3d;
+}
+.pin.unstable { background: #4a3a1a; border-color: #6a5624; }
+.pin.off { background: #4a1a1a; border-color: #6a2424; }
+
+.status {
+  font-size: 0.85rem;
+  color: #9aa0a8;
+  margin: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f4f4f6;
+    --panel: #ffffff;
+    --border: #d8dade;
+    --text: #1a1c1f;
+  }
+}

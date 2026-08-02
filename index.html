@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>接触不良動画フィルター</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>接触不良動画フィルター</h1>
+  <p class="credit">
+    <a href="https://github.com/goroman/cluade-famicom-emu" target="_blank" rel="noopener">claude-famicom-emu</a>
+    のファミコン端子接触不良シミュレータのロジックをカメラ／動画映像に応用したもの。
+  </p>
+</header>
+
+<main>
+  <div class="stage">
+    <canvas id="out-canvas"></canvas>
+    <video id="source-video" autoplay playsinline muted style="display:none"></video>
+  </div>
+
+  <div class="controls">
+    <div class="source-controls">
+      <button id="btn-camera" type="button">📷 カメラ映像</button>
+      <button id="btn-file" type="button">📁 動画/画像を開く</button>
+      <input id="file-input" type="file" accept="video/*,image/*" style="display:none">
+    </div>
+
+    <div class="tilt-controls">
+      <label for="tilt-slider">カセットの傾き</label>
+      <input id="tilt-slider" type="range" value="0">
+      <span id="tilt-label">+0.0°</span>
+    </div>
+
+    <div class="pin-controls">
+      <button id="btn-blow" type="button">💨 息を吹く</button>
+      <button id="btn-reseat" type="button">🔌 挿し直す</button>
+    </div>
+
+    <div id="pin-grid" class="pin-grid"></div>
+
+    <p id="status" class="status">映像ソースを選択してください</p>
+  </div>
+</main>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
