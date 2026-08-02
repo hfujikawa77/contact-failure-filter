@@ -162,6 +162,16 @@ function tick() {
   if (bus.tilt !== 0 || bus.manualOff.size) bus.recompute();
 
   if (!drawSourceCover(video, RENDER_W, RENDER_H)) return;
+
+  // Contacts fully seated (no tilt, no dead pins) -> show the original
+  // color frame as-is instead of running it through the CHR/glitch pipeline,
+  // which always collapses color into 4 gray levels.
+  if (bus.tilt === 0 && bus.manualOff.size === 0) {
+    outCtx.drawImage(srcCanvas, 0, 0);
+    resetBus();
+    return;
+  }
+
   const srcImage = srcCtx.getImageData(0, 0, RENDER_W, RENDER_H);
   applyGlitch(srcImage.data, dstImage.data, bus.addrMask, bus.dataMask);
   outCtx.putImageData(dstImage, 0, 0);
