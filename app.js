@@ -23,6 +23,7 @@ const btnFile = document.getElementById('btn-file');
 const fileInput = document.getElementById('file-input');
 const tiltSlider = document.getElementById('tilt-slider');
 const tiltLabel = document.getElementById('tilt-label');
+const btnGyro = document.getElementById('btn-gyro');
 const btnBlow = document.getElementById('btn-blow');
 const btnReseat = document.getElementById('btn-reseat');
 const pinGrid = document.getElementById('pin-grid');
@@ -89,6 +90,59 @@ tiltSlider.addEventListener('dblclick', () => {
   updatePinGridUI();
 });
 updateTiltUI();
+
+// --- gyroscope tilt control ---
+// Maps the phone's left/right roll (gamma, roughly -90..+90°) onto the
+// cassette tilt range. Clamped to a ±45° input window so a comfortable
+// hand-tilt reaches the full ±TILT_MAX effect instead of needing to nearly
+// lay the phone flat.
+const GYRO_INPUT_RANGE = 45;
+let gyroEnabled = false;
+let gyroDirty = false;
+
+function onDeviceOrientation(event) {
+  if (event.gamma === null) return;
+  const clamped = Math.max(-GYRO_INPUT_RANGE, Math.min(GYRO_INPUT_RANGE, event.gamma));
+  bus.setTilt((clamped / GYRO_INPUT_RANGE) * TILT_MAX);
+  gyroDirty = true;
+}
+
+function setGyroEnabled(on) {
+  gyroEnabled = on;
+  tiltSlider.disabled = on;
+  btnGyro.classList.toggle('active', on);
+  btnGyro.setAttribute('aria-pressed', String(on));
+  btnGyro.textContent = on ? '📱 ジャイロ操作: ON' : '📱 ジャイロ操作: OFF';
+  if (on) {
+    window.addEventListener('deviceorientation', onDeviceOrientation);
+  } else {
+    window.removeEventListener('deviceorientation', onDeviceOrientation);
+  }
+}
+
+btnGyro.addEventListener('click', async () => {
+  if (gyroEnabled) {
+    setGyroEnabled(false);
+    return;
+  }
+  if (typeof DeviceOrientationEvent === 'undefined') {
+    setStatus('このデバイス/ブラウザはジャイロセンサーに対応していません');
+    return;
+  }
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    try {
+      const result = await DeviceOrientationEvent.requestPermission();
+      if (result !== 'granted') {
+        setStatus('ジャイロセンサーの利用が許可されませんでした');
+        return;
+      }
+    } catch (err) {
+      setStatus('ジャイロセンサーを利用できませんでした: ' + err.message);
+      return;
+    }
+  }
+  setGyroEnabled(true);
+});
 
 btnBlow.addEventListener('click', () => {
   bus.blow();
@@ -157,6 +211,13 @@ function drawSourceCover(el, w, h) {
 
 function tick() {
   requestAnimationFrame(tick);
+
+  if (gyroDirty) {
+    gyroDirty = false;
+    updateTiltUI();
+    updatePinGridUI();
+  }
+
   if (!haveSource || video.readyState < 2) return;
 
   if (bus.tilt !== 0 || bus.manualOff.size) bus.recompute();
