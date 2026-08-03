@@ -80,6 +80,7 @@ button:hover { border-color: var(--accent); }
 .tilt-controls {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.6rem;
   background: var(--panel);
   border: 1px solid var(--border);
@@ -87,8 +88,18 @@ button:hover { border-color: var(--accent); }
   padding: 0.6rem 0.8rem;
 }
 .tilt-controls label { font-size: 0.85rem; white-space: nowrap; }
-.tilt-controls input[type="range"] { flex: 1; }
+.tilt-controls input[type="range"] { flex: 1; min-width: 8em; }
+.tilt-controls input[type="range"]:disabled { opacity: 0.5; }
 #tilt-label { font-variant-numeric: tabular-nums; width: 4.5em; text-align: right; }
+
+.gyro-toggle {
+  white-space: nowrap;
+  flex: 1 0 100%;
+}
+.gyro-toggle.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 
 .pin-grid {
   background: var(--panel);
